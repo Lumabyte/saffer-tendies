@@ -1,0 +1,163 @@
+CREATE TABLE IF NOT EXISTS "advertised"(
+  PRIMARY KEY "id" TEXT,
+  "tender_No" TEXT,
+  "type" TEXT,
+  "delivery" TEXT,
+  "department" TEXT,
+  "date_Published" TEXT,
+  "cbrief" TEXT,
+  "cd" TEXT,
+  "dp" TEXT,
+  "closing_Date" TEXT,
+  "brief" TEXT,
+  "compulsory_briefing_session" TEXT,
+  "status" TEXT,
+  "category" TEXT,
+  "description" TEXT,
+  "province" TEXT,
+  "contactPerson" TEXT,
+  "email" TEXT,
+  "telephone" TEXT,
+  "fax" TEXT,
+  "briefingVenue" TEXT,
+  "conditions" TEXT,
+  "bf" TEXT,
+  "bc" TEXT
+);
+
+CREATE TABLE IF NOT EXISTS "advertised_sd"(
+  "supportDocumentID" TEXT,
+  "fileName" TEXT,
+  "extension" TEXT,
+  "tendersID" TEXT,
+  "active" TEXT,
+  "updatedBy" TEXT,
+  "dateModified" TEXT,
+  "tenders" TEXT,
+  FOREIGN KEY (tendersID) REFERENCES advertisded(id)
+);
+
+CREATE TABLE IF NOT EXISTS "awarded"(
+  PRIMARY KEY "id" TEXT,
+  "tender_No" TEXT,
+  "type" TEXT,
+  "delivery" TEXT,
+  "department" TEXT,
+  "cbrief" TEXT,
+  "cd" TEXT,
+  "dp" TEXT,
+  "date_Published" TEXT,
+  "brief" TEXT,
+  "closing_Date" TEXT,
+  "compulsory_briefing_session" TEXT,
+  "status" TEXT,
+  "category" TEXT,
+  "description" TEXT,
+  "province" TEXT,
+  "contactPerson" TEXT,
+  "email" TEXT,
+  "telephone" TEXT,
+  "fax" TEXT,
+  "briefingVenue" TEXT,
+  "conditions" TEXT,
+  "biddersdoc" TEXT,
+  "biddersdoclink" TEXT,
+  "bf" TEXT,
+  "bc" TEXT,
+  "company" TEXT,
+  "award_contact" TEXT,
+  "contactNumber" TEXT,
+  "dateModified" TEXT,
+  "bidders" TEXT
+);
+
+CREATE TABLE IF NOT EXISTS "awarded_sd"(
+  "supportDocumentID" TEXT,
+  "fileName" TEXT,
+  "extension" TEXT,
+  "tendersID" TEXT,
+  "active" TEXT,
+  "updatedBy" TEXT,
+  "dateModified" TEXT,
+  "tenders" TEXT,
+  FOREIGN KEY (tendersID) REFERENCES awarded(id)
+);
+
+CREATE TABLE IF NOT EXISTS "closed"(
+  PRIMARY KEY "id" TEXT,
+  "tender_No" TEXT,
+  "type" TEXT,
+  "delivery" TEXT,
+  "department" TEXT,
+  "cbrief" TEXT,
+  "cd" TEXT,
+  "dp" TEXT,
+  "date_Published" TEXT,
+  "brief" TEXT,
+  "closing_Date" TEXT,
+  "compulsory_briefing_session" TEXT,
+  "status" TEXT,
+  "category" TEXT,
+  "description" TEXT,
+  "province" TEXT,
+  "contactPerson" TEXT,
+  "email" TEXT,
+  "telephone" TEXT,
+  "fax" TEXT,
+  "briefingVenue" TEXT,
+  "bf" TEXT,
+  "bc" TEXT,
+  "conditions" TEXT
+);
+
+CREATE TABLE IF NOT EXISTS "closed_sd"(
+  "supportDocumentID" TEXT,
+  "fileName" TEXT,
+  "extension" TEXT,
+  "tendersID" TEXT,
+  "active" TEXT,
+  "updatedBy" TEXT,
+  "dateModified" TEXT,
+  "tenders" TEXT,
+  FOREIGN KEY (tendersID) REFERENCES closed(id)
+);
+
+CREATE TABLE IF NOT EXISTS "cancelled"(
+  PRIMARY KEY "id" TEXT,
+  "tender_No" TEXT,
+  "type" TEXT,
+  "delivery" TEXT,
+  "department" TEXT,
+  "cbrief" TEXT,
+  "cd" TEXT,
+  "dp" TEXT,
+  "date_Published" TEXT,
+  "brief" TEXT,
+  "closing_Date" TEXT,
+  "compulsory_briefing_session" TEXT,
+  "status" TEXT,
+  "category" TEXT,
+  "description" TEXT,
+  "conditions" TEXT,
+  "province" TEXT,
+  "contactPerson" TEXT,
+  "email" TEXT,
+  "telephone" TEXT,
+  "fax" TEXT,
+  "briefingVenue" TEXT,
+  "bf" TEXT,
+  "bc" TEXT,
+  "reason" TEXT
+);
+
+CREATE TABLE IF NOT EXISTS "cancelled_sd"(
+  "supportDocumentID" TEXT,
+  "fileName" TEXT,
+  "extension" TEXT,
+  "tendersID" TEXT,
+  "active" TEXT,
+  "updatedBy" TEXT,
+  "dateModified" TEXT,
+  "tenders" TEXT,
+  FOREIGN KEY (tendersID) REFERENCES cancelled(id)
+);
