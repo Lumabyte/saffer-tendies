@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS "advertised"(
-  PRIMARY KEY "id" TEXT,
+  "id" TEXT PRIMARY KEY,
   "tender_No" TEXT,
   "type" TEXT,
   "delivery" TEXT,
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS "advertised_sd"(
 );
 
 CREATE TABLE IF NOT EXISTS "awarded"(
-  PRIMARY KEY "id" TEXT,
+  "id" TEXT PRIMARY KEY,
   "tender_No" TEXT,
   "type" TEXT,
   "delivery" TEXT,
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS "awarded_sd"(
 );
 
 CREATE TABLE IF NOT EXISTS "closed"(
-  PRIMARY KEY "id" TEXT,
+  "id" TEXT PRIMARY KEY,
   "tender_No" TEXT,
   "type" TEXT,
   "delivery" TEXT,
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS "closed_sd"(
 );
 
 CREATE TABLE IF NOT EXISTS "cancelled"(
-  PRIMARY KEY "id" TEXT,
+  "id" TEXT PRIMARY KEY,
   "tender_No" TEXT,
   "type" TEXT,
   "delivery" TEXT,

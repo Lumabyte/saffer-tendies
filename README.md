@@ -5,3 +5,11 @@ This is a collection of tender data that has been converted into csv and importe
 - curl
 - sqlite3
 
+# Warning
+There are some failures around unique constraints, I haven't looked into it yet!
+
+# Setup
+Just run the `bootstrap.sh` script like so :)
+```
+./bootstrap
+```
