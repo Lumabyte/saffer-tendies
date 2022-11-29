@@ -4,6 +4,7 @@ This is a collection of tender data that has been converted into csv and importe
 # Prereqisites
 - curl
 - sqlite3
+- jq
 
 # Warning
 There are some failures around unique constraints, I haven't looked into it yet!
