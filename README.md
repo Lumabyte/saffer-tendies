@@ -14,3 +14,24 @@ Just run the `bootstrap.sh` script like so :)
 ```
 ./bootstrap.sh
 ```
+
+# HTTP Endpoints
+
+- Advertised tenders:
+```
+https://www.etenders.gov.za/Home/TenderOpportunities/?status=1
+```
+- Awarded tenders:
+```
+https://www.etenders.gov.za/Home/TenderOpportunities/?status=2
+```
+
+- Closed tenders:
+```
+https://www.etenders.gov.za/Home/TenderOpportunities/?status=3
+```
+
+- Cancelled tenders:
+```
+https://www.etenders.gov.za/Home/TenderOpportunities/?status=4
+```
