@@ -3,17 +3,18 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
-	"net/http"
+	"os"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 // const advertised_url string = "https://www.etenders.gov.za/Home/TenderOpportunities/?status=1"
 // const awarded_url string = "https://www.etenders.gov.za/Home/TenderOpportunities/?status=2"
-const closed_url string = "https://www.etenders.gov.za/Home/TenderOpportunities/?status=3"
-
+// const closed_url string = "https://www.etenders.gov.za/Home/TenderOpportunities/?status=3"
 // const cancelled_url string = "https://www.etenders.gov.za/Home/TenderOpportunities/?status=4"
 
 // Using this actually nested everything one object deeper, eg [{{}}]
@@ -36,6 +37,8 @@ type Tender struct {
 	Brief                     string               `json:"brief"`                       // Should this be some sort of time format?
 	ClosingDate               string               `json:"closing_Date"`                // Should this be some sort of time format?
 	CompulsoryBriefingSession string               `json:"compulsory_briefing_session"` // Should this be some sort of time format?
+	DepartmentID              string               `json:"departmentId"`
+	ProvinceID                string               `json:"provinceId"`
 	Status                    string               `json:"status"`
 	Category                  string               `json:"category"`
 	Description               string               `json:"description"`
@@ -46,9 +49,16 @@ type Tender struct {
 	Fax                       string               `json:"fax"`
 	BriefingVenue             string               `json:"briefingVenue"`
 	SupportingDocument        []SupportingDocument `json:"sd" gorm:"foreignKey:TendersID;references:TenderID"`
+	Bidders                   string               `json:"bidders"`
+	BiddersDoc                string               `json:"biddersdoc"`
+	BiddersDocLink            string               `json:"biddersdoclink"`
+	SuccessfulBidders         []SuccessfulBidders  `json:"successfulbidders" gorm:"foreignKey:TendersID;references:TenderID"`
 	BF                        string               `json:"bf"`
 	BC                        string               `json:"bc"`
+	Reason                    string               `json:"reason"`
+	ESubmissions              bool                 `json:"eSubmission"`
 	Conditions                string               `json:"conditions"`
+	Actions                   Actions              `json:"actions"  gorm:"foreignKey:TenderNo;references:TenderNo"`
 }
 
 type SupportingDocument struct {
@@ -61,6 +71,29 @@ type SupportingDocument struct {
 	UpdatedBy         string `json:"updatedBy"`
 	DateModified      string `json:"dateModified"` // Should this be some sort of time format?
 	Tenders           string `json:"tenders"`
+}
+
+type SuccessfulBidders struct {
+	gorm.Model
+	AwardID       int    `json:"awardID"`
+	Company       string `json:"company"`
+	ContactPerson string `json:"contactPerson"`
+	ContactNumber string `json:"contactNumber"`
+	TendersID     int    `json:"tendersID"`
+	UpdatedBy     string `json:"updatedBy"`
+	DateModified  string `json:"dateModified"`
+	OCID          string `json:"ocid"`
+	ReleaseID     int    `json:"releaseId"`
+	SysStartTime  string `json:"sysStartTime"`
+	SysEndTime    string `json:"sysEndTime"`
+	Tenders       string `json:"tenders"`
+}
+
+type Actions struct {
+	Authorized   bool   `json:"authorized"`
+	TenderNo     string `json:"tender_No"`
+	Notification bool   `json:"notification"`
+	Bookmark     bool   `json:"bookmark"`
 }
 
 // var resp = []byte(`
@@ -112,7 +145,38 @@ func (SupportingDocument) TableName() string {
 	return "supdocs"
 }
 
+func (SuccessfulBidders) TableName() string {
+	return "successful_bidders"
+}
+
+func (Actions) TableName() string {
+	return "actions"
+}
+
 func main() {
+
+	// jsonFile, err := os.Open("./data/json/etenders_advertised.json")
+	// jsonFile, err := os.Open("./data/json/etenders_awarded.json")
+	// jsonFile, err := os.Open("./data/json/etenders_cancelled.json")
+	jsonFile, err := os.Open("./data/json/etenders_closed.json")
+	if err != nil {
+		log.Fatalln("Could not open JSON file")
+	}
+	defer jsonFile.Close()
+
+	byteValue, err := ioutil.ReadAll(jsonFile)
+	if err != nil {
+		log.Fatalln("Could not convert file into byte array")
+	}
+
+	var data []Tender
+	json.Unmarshal(byteValue, &data)
+
+	// json_data, err := json.Marshal(data[0])
+	// if err != nil {
+	// 	log.Fatalln("Failed marshalling data to JSON")
+	// }
+	// fmt.Printf("%+v\n", string(json_data))
 
 	// This code was used with resp above
 	// var data []Tender
@@ -124,17 +188,17 @@ func main() {
 	// post, _ := json.Marshal(data)
 	// fmt.Println(string(post))
 
-	resp, err := http.Get(closed_url)
-	if err != nil {
-		log.Fatalln("Got an error on that!")
-	}
-	defer resp.Body.Close()
+	// resp, err := http.Get(closed_url)
+	// if err != nil {
+	// 	log.Fatalln("Got an error on that!")
+	// }
+	// defer resp.Body.Close()
 
-	var data []Tender
+	// var data []Tender
 
-	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
-		log.Fatalln(err)
-	}
+	// if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+	// 	log.Fatalln(err)
+	// }
 
 	// Commenting this out for when I wanna use the _FULL_ JSON data again
 	// json_data, err := json.Marshal(data)
@@ -146,7 +210,7 @@ func main() {
 	// fmt.Printf("%T\n", string(json_data))
 
 	db, err := gorm.Open(sqlite.Open("new.db"), &gorm.Config{
-		// Logger: logger.Default.LogMode(logger.Info),
+		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
 		log.Fatalln(err)
@@ -154,10 +218,14 @@ func main() {
 
 	var supdocs SupportingDocument
 	var tenders Tender
+	var successful_bidders SuccessfulBidders
+	var actions Actions
 	db.AutoMigrate(&supdocs)
 	db.AutoMigrate(&tenders)
+	db.AutoMigrate(&successful_bidders)
+	db.AutoMigrate(&actions)
 	result := db.CreateInBatches(&data, 100)
-	// db.First(&data)
+	// // db.First(&data)
 	fmt.Println(result.Error)
 
 	// json_data, err := json.Marshal(data[0])
