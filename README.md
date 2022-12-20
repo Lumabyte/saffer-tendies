@@ -35,3 +35,15 @@ https://www.etenders.gov.za/Home/TenderOpportunities/?status=3
 ```
 https://www.etenders.gov.za/Home/TenderOpportunities/?status=4
 ```
+
+# SQLite
+
+- Add headers to output
+```
+.headers on
+```
+
+- Format results as columns
+```
+.mode column
+```
